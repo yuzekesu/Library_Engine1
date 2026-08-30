@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Abstract Files">
+      <UniqueIdentifier>{c4f22224-f110-4d53-8616-a7b5e619574c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipeline Files">
+      <UniqueIdentifier>{e9a7df0a-3985-47f4-abe2-bec51da2b124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipeline Files\Header">
+      <UniqueIdentifier>{245ac187-8f4a-4673-ba6c-c9ca287a41a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipeline Files\Source">
+      <UniqueIdentifier>{c54bf0b0-667f-4a32-af64-55eabb8b3c26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface Files">
+      <UniqueIdentifier>{c37c644f-fa81-49e2-9675-7d8ae0b72d2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface Files\Header">
+      <UniqueIdentifier>{350de9ef-14f3-488d-a2b4-375d9448d0ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface Files\Source">
+      <UniqueIdentifier>{b751d19e-62cd-41d7-9a33-5bb5b30366c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{7675fcde-6930-41dc-9061-7e0dec45c620}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="__WinMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindowManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11Manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Exception.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPipelineManager.cpp">
+      <Filter>Pipeline Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="IDrawableIndexedMesh.cpp">
+      <Filter>Interface Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderWindow.cpp">
+      <Filter>Interface Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="IMovable.cpp">
+      <Filter>Interface Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IEventHandler.cpp">
+      <Filter>Interface Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestEventHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainWindowManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11Manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPipelineManager.h">
+      <Filter>Pipeline Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="IDrawableIndexedMesh.h">
+      <Filter>Interface Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderWindow.h">
+      <Filter>Interface Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderPipeline.h">
+      <Filter>Interface Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="IMovable.h">
+      <Filter>Interface Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IEventHandler.h">
+      <Filter>Interface Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestEventHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="TestShader.hlsl">
+      <Filter>Shader Files</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
