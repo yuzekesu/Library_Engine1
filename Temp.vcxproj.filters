@@ -37,6 +37,15 @@
     <Filter Include="Shader Files">
       <UniqueIdentifier>{7675fcde-6930-41dc-9061-7e0dec45c620}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EventHandler Files">
+      <UniqueIdentifier>{c1f6d1bb-b7b1-4fe4-9f18-71c2937475bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EventHandler Files\Header">
+      <UniqueIdentifier>{d9de50a7-5123-4772-a61a-75c1a0c9df51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EventHandler Files\Source">
+      <UniqueIdentifier>{8b896755-ce56-4bd9-8112-e3dbb7d2240f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="__WinMain.cpp">
@@ -82,7 +91,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TestEventHandler.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>EventHandler Files\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,5 +145,8 @@
     <FxCompile Include="TestShader.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".TODO.md" />
   </ItemGroup>
 </Project>

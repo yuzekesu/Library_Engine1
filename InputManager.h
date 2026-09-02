@@ -10,9 +10,9 @@ public:
 	InputManager() = delete;
 	InputManager(std::initializer_list<std::weak_ptr<IEventHandler>> list = {});
 	const POINT& MousePosition() const noexcept;
-	void New(UINT, WPARAM, LPARAM);
-	void HandleInputs();
-	void SetEventHandlers(std::initializer_list<std::weak_ptr<IEventHandler>>);
+	void Register(UINT, WPARAM, LPARAM);
+	void Handle();
+	void Set(std::initializer_list<std::weak_ptr<IEventHandler>);
 private:
 	POINT _mousePosition{};
 	std::vector<std::weak_ptr<IEventHandler>> _registeredEvent;

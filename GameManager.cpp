@@ -45,7 +45,7 @@ void GameManager::Start() {
 			if (msg.message == WM_QUIT) return;
 			DispatchMessageW(&msg);
 			if (msg.message == WM_SETFOCUS || msg.message == WM_KEYDOWN || msg.message == WM_KEYUP || msg.message == WM_MOUSEMOVE) {
-				this->_inputManager.New(msg.message, msg.wParam, msg.lParam);
+				this->_inputManager.Register(msg.message, msg.wParam, msg.lParam);
 			}
 		}
 		this->_mainDisplay.RenderFrame();
