@@ -23,45 +23,8 @@ D3D11_INPUT_ELEMENT_DESC InputElementDesc[]{
 /// 1. The definition is at the botton of this file.
 extern const std::string SHADER;
 /// # CONSTRUCTOR
-/// 1. Vertex shader.
-/// 2. Input layout (checks with bytecode of the vertex shader).
-/// 3. Pixel shader.
-TestPipelineManager::TestPipelineManager(std::vector<std::weak_ptr<Entity>>& vector) : _pendingItems(vector) {
-	HRESULT hr;
-	auto& dx = DirectX11Manager::Device();
-	ComPtr<ID3DBlob> byteCode;
-	ComPtr<ID3DBlob> errorMsg;
-	// vertex shader.
-	hr = D3DCompile(SHADER.c_str(), SHADER.size(), "my embedded vertex shader", nullptr, nullptr, "vMain", "vs_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, byteCode.ReleaseAndGetAddressOf(), errorMsg.ReleaseAndGetAddressOf());
-	if (FAILED(hr)) throw Exception(*errorMsg.Get());
-	hr = dx.CreateVertexShader(byteCode->GetBufferPointer(), byteCode->GetBufferSize(), nullptr, this->_vs.ReleaseAndGetAddressOf());
-	if (FAILED(hr)) throw Exception(hr);
-	// input layout.
-	dx.CreateInputLayout(InputElementDesc, std::size(InputElementDesc), byteCode->GetBufferPointer(), byteCode->GetBufferSize(), this->_inputLayout.ReleaseAndGetAddressOf());
-	// pixel shader.
-	hr = D3DCompile(SHADER.c_str(), SHADER.size(), "my embedded pixel shader", nullptr, nullptr, "pMain", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, byteCode.ReleaseAndGetAddressOf(), errorMsg.ReleaseAndGetAddressOf());
-	if (FAILED(hr)) throw Exception(*errorMsg.Get());
-	hr = dx.CreatePixelShader(byteCode->GetBufferPointer(), byteCode->GetBufferSize(), nullptr, this->_ps.ReleaseAndGetAddressOf());
-	if (FAILED(hr)) throw Exception(hr);
-	// constant buffer.
-	{
-		D3D11_BUFFER_DESC d{};
-		d.ByteWidth = sizeof(TestPipelineManager::ConstantBuffer);
-		d.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		d.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		d.Usage = D3D11_USAGE_DYNAMIC;
-		hr = dx.CreateBuffer(&d, nullptr, this->_cb.ReleaseAndGetAddressOf());
-		if (FAILED(hr)) throw Exception(hr);
-	}
-	// rasterizer state.
-	{
-		D3D11_RASTERIZER_DESC d{};
-		d.FillMode = D3D11_FILL_SOLID;
-		d.CullMode = D3D11_CULL_BACK;
-		d.DepthClipEnable = TRUE;
-		dx.CreateRasterizerState(&d, this->_rs.ReleaseAndGetAddressOf());
-	}
-
+TestPipelineManager::TestPipelineManager(std::initializer_list<std::weak_ptr<Entity>> vector) : TestPipelineManager() {
+	_pendingItems = vector;
 }
 /// # DESCRIPTION
 /// 1. Render all stored drawables 
@@ -135,6 +98,55 @@ void TestPipelineManager::Run(IRenderWindow& w, DirectX11Manager& dx) {
 	ComPtr<ID3D11CommandList> cl;
 	hr = dx.DeferredContext().FinishCommandList(FALSE, cl.ReleaseAndGetAddressOf());
 	DirectX11Manager::PushCommandListToTheRenderQueue(cl, dx.ComPtrSwapChain());
+}
+TestPipelineManager& TestPipelineManager::Instance() {
+	static auto global_pipeline = std::make_unique<TestPipelineManager>();
+	return *global_pipeline;
+}
+void TestPipelineManager::Add(std::weak_ptr<Entity> entity) {
+	static std::vector<std::weak_ptr<Entity>> global_vector;
+	global_vector.push_back(entity);
+}
+/// # CONSTRUCTOR
+/// 1. Vertex shader.
+/// 2. Input layout (checks with bytecode of the vertex shader).
+/// 3. Pixel shader.
+TestPipelineManager::TestPipelineManager() {
+	HRESULT hr;
+	auto& dx = DirectX11Manager::Device();
+	ComPtr<ID3DBlob> byteCode;
+	ComPtr<ID3DBlob> errorMsg;
+	// vertex shader.
+	hr = D3DCompile(SHADER.c_str(), SHADER.size(), "my embedded vertex shader", nullptr, nullptr, "vMain", "vs_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, byteCode.ReleaseAndGetAddressOf(), errorMsg.ReleaseAndGetAddressOf());
+	if (FAILED(hr)) throw Exception(*errorMsg.Get());
+	hr = dx.CreateVertexShader(byteCode->GetBufferPointer(), byteCode->GetBufferSize(), nullptr, this->_vs.ReleaseAndGetAddressOf());
+	if (FAILED(hr)) throw Exception(hr);
+	// input layout.
+	dx.CreateInputLayout(InputElementDesc, std::size(InputElementDesc), byteCode->GetBufferPointer(), byteCode->GetBufferSize(), this->_inputLayout.ReleaseAndGetAddressOf());
+	// pixel shader.
+	hr = D3DCompile(SHADER.c_str(), SHADER.size(), "my embedded pixel shader", nullptr, nullptr, "pMain", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, byteCode.ReleaseAndGetAddressOf(), errorMsg.ReleaseAndGetAddressOf());
+	if (FAILED(hr)) throw Exception(*errorMsg.Get());
+	hr = dx.CreatePixelShader(byteCode->GetBufferPointer(), byteCode->GetBufferSize(), nullptr, this->_ps.ReleaseAndGetAddressOf());
+	if (FAILED(hr)) throw Exception(hr);
+	// constant buffer.
+	{
+		D3D11_BUFFER_DESC d{};
+		d.ByteWidth = sizeof(TestPipelineManager::ConstantBuffer);
+		d.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		d.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		d.Usage = D3D11_USAGE_DYNAMIC;
+		hr = dx.CreateBuffer(&d, nullptr, this->_cb.ReleaseAndGetAddressOf());
+		if (FAILED(hr)) throw Exception(hr);
+	}
+	// rasterizer state.
+	{
+		D3D11_RASTERIZER_DESC d{};
+		d.FillMode = D3D11_FILL_SOLID;
+		d.CullMode = D3D11_CULL_BACK;
+		d.DepthClipEnable = TRUE;
+		dx.CreateRasterizerState(&d, this->_rs.ReleaseAndGetAddressOf());
+	}
+
 }
 /// # DESCRIPTION
 /// 1. Create the perspective matrix based on the window size.

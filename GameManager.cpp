@@ -49,7 +49,7 @@ void GameManager::Start() {
 			}
 		}
 		this->_mainDisplay.RenderFrame();
-		this->_inputManager.HandleInputs();
+		this->_inputManager.Handle();
 		timer.Wait();
 	}
 }

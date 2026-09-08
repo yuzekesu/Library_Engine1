@@ -20,12 +20,6 @@ public:
 	~DirectX11Manager();
 	DirectX11Manager& operator=(const DirectX11Manager&) = delete;
 	DirectX11Manager& operator=(DirectX11Manager&&) = delete;
-	static void InitializeStatics();
-	static void PushCommandListToTheRenderQueue(ComPtr<ID3D11CommandList>&, ComPtr<IDXGISwapChain4>&);
-	static IDXGIFactory6& Factory() noexcept;
-	static IDXGIAdapter4& Adapter() noexcept;
-	static ID3D11Device& Device() noexcept;
-	static ID3D11DeviceContext& ImmediateContext() noexcept;
 	ID3D11DeviceContext& DeferredContext() noexcept;
 	IDXGISwapChain4& SwapChain() noexcept;
 	ComPtr<IDXGISwapChain4>& ComPtrSwapChain() noexcept;
@@ -33,15 +27,13 @@ public:
 	const D3D11_VIEWPORT& Viewport() noexcept;
 	IDCompositionDesktopDevice& CompositionDevice() noexcept;
 	ID3D11DepthStencilView& DepthStencilView() noexcept;
+	static void InitializeStatics();
+	static void PushCommandListToTheRenderQueue(ComPtr<ID3D11CommandList>&, ComPtr<IDXGISwapChain4>&);
+	static IDXGIFactory6& Factory() noexcept;
+	static IDXGIAdapter4& Adapter() noexcept;
+	static ID3D11Device& Device() noexcept;
+	static ID3D11DeviceContext& ImmediateContext() noexcept;
 private:
-	inline static bool _areStaticsInitialized = false;
-	inline static std::jthread _renderThread;
-	inline static std::mutex _renderQueueMutex;
-	inline static std::queue<std::tuple<ComPtr<ID3D11CommandList>, ComPtr<IDXGISwapChain4>>> _renderQueue;
-	inline static ComPtr<IDXGIFactory6> _factory;
-	inline static ComPtr<IDXGIAdapter4> _adapter;
-	inline static ComPtr<ID3D11Device> _device;
-	inline static ComPtr<ID3D11DeviceContext> _immediateContext;
 	bool _isMainManager = false;
 	D3D11_VIEWPORT _viewport{};
 	ComPtr<ID3D11DeviceContext> _deferredContext;
@@ -52,5 +44,13 @@ private:
 	ComPtr<IDCompositionVisual3> _visual;
 	ComPtr<ID3D11Texture2D> _depthBuffer;
 	ComPtr<ID3D11DepthStencilView> _depthStencilView;
+	inline static bool _areStaticsInitialized = false;
+	inline static std::jthread _renderThread;
+	inline static std::mutex _renderQueueMutex;
+	inline static std::queue<std::tuple<ComPtr<ID3D11CommandList>, ComPtr<IDXGISwapChain4>>> _renderQueue;
+	inline static ComPtr<IDXGIFactory6> _factory;
+	inline static ComPtr<IDXGIAdapter4> _adapter;
+	inline static ComPtr<ID3D11Device> _device;
+	inline static ComPtr<ID3D11DeviceContext> _immediateContext;
 };
 

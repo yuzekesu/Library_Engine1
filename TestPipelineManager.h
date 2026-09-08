@@ -18,9 +18,13 @@ public:
 		std::weak_ptr<IMovable> wpMovable;
 		std::weak_ptr<IDrawableIndexedMesh> wpDrawable;
 	};
-	TestPipelineManager() = delete;
-	TestPipelineManager(std::vector<std::weak_ptr<Entity>>&);
+	TestPipelineManager(std::initializer_list<std::weak_ptr<Entity>>);
+	void Add(std::weak_ptr<Entity>);
 	void Run(IRenderWindow&, DirectX11Manager&) override;
+	static TestPipelineManager& Instance();
+	static void Add(std::weak_ptr<Entity>);
+protected:
+	TestPipelineManager();
 private:
 	struct ConstantBuffer {
 		DirectX::XMFLOAT4X4 pvwMatrix;
@@ -32,7 +36,7 @@ private:
 	ComPtr<ID3D11PixelShader> _ps;
 	ComPtr<ID3D11Buffer> _cb;
 	ComPtr<ID3D11RasterizerState> _rs;
-	std::vector<std::weak_ptr<Entity>>& _pendingItems;
+	std::vector<std::weak_ptr<Entity>> _pendingItems;
 	DirectX::XMMATRIX _PerspectiveMatrix(IRenderWindow&) const noexcept;
 	DirectX::XMMATRIX _ViewMatrix() const;
 };

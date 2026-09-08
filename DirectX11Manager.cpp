@@ -120,6 +120,37 @@ DirectX11Manager::~DirectX11Manager() {
 	this->_renderThread.request_stop();
 	this->_renderThread.join();
 }
+ID3D11DeviceContext& DirectX11Manager::DeferredContext() noexcept {
+	return *this->_deferredContext.Get();
+}
+/// # DESCRIPTION
+/// 1. A simple getter function.
+IDXGISwapChain4& DirectX11Manager::SwapChain() noexcept {
+	return *this->_swapchain.Get();
+}
+ComPtr<IDXGISwapChain4>& DirectX11Manager::ComPtrSwapChain() noexcept {
+	return this->_swapchain;
+}
+/// # DESCRIPTION
+/// 1. A simple getter function.
+ID3D11RenderTargetView& DirectX11Manager::RTV() noexcept {
+	return *this->_rtv.Get();
+}
+/// # DESCRIPTION
+/// 1. A simple getter function.
+const D3D11_VIEWPORT& DirectX11Manager::Viewport() noexcept {
+	return this->_viewport;
+}
+/// # DESCRIPTION
+/// 1. A simple getter function.
+IDCompositionDesktopDevice& DirectX11Manager::CompositionDevice() noexcept {
+	return *this->_compositionDevice.Get();
+}
+/// # DESCRIPTION
+/// 1. A simple getter function.
+ID3D11DepthStencilView& DirectX11Manager::DepthStencilView() noexcept {
+	return *this->_depthStencilView.Get();
+}
 /// # HELPER CONSTRUCTOR
 /// 1. starting rendering jthread.
 /// 2. static Factory.
@@ -199,35 +230,5 @@ ID3D11Device& DirectX11Manager::Device() noexcept {
 ID3D11DeviceContext& DirectX11Manager::ImmediateContext() noexcept {
 	InitializeStatics();
 	return *DirectX11Manager::_immediateContext.Get();
-}
-ID3D11DeviceContext& DirectX11Manager::DeferredContext() noexcept {
-	return *this->_deferredContext.Get();
-}
-/// # DESCRIPTION
-/// 1. A simple getter function.
-IDXGISwapChain4& DirectX11Manager::SwapChain() noexcept {
-	return *this->_swapchain.Get();
-}
-ComPtr<IDXGISwapChain4>& DirectX11Manager::ComPtrSwapChain() noexcept {
-	return this->_swapchain;
-}
-/// # DESCRIPTION
-/// 1. A simple getter function.
-ID3D11RenderTargetView& DirectX11Manager::RTV() noexcept {
-	return *this->_rtv.Get();
-}
-/// # DESCRIPTION
-/// 1. A simple getter function.
-const D3D11_VIEWPORT& DirectX11Manager::Viewport() noexcept {
-	return this->_viewport;
-}
-/// # DESCRIPTION
-/// 1. A simple getter function.
-IDCompositionDesktopDevice& DirectX11Manager::CompositionDevice() noexcept {
-	return *this->_compositionDevice.Get();
-}
-
-ID3D11DepthStencilView& DirectX11Manager::DepthStencilView() noexcept {
-	return *this->_depthStencilView.Get();
 }
 

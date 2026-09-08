@@ -12,7 +12,7 @@ public:
 	const POINT& MousePosition() const noexcept;
 	void Register(UINT, WPARAM, LPARAM);
 	void Handle();
-	void Set(std::initializer_list<std::weak_ptr<IEventHandler>);
+	void Set(std::initializer_list<std::weak_ptr<IEventHandler>>);
 private:
 	POINT _mousePosition{};
 	std::vector<std::weak_ptr<IEventHandler>> _registeredEvent;
