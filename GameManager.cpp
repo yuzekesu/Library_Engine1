@@ -13,10 +13,10 @@ GameManager::GameManager() {
 	for (int i = 0; i < 10; ++i) {
 		for (int u = 0; u < 10; ++u) {
 			auto cube = std::make_shared<Entity>(L"cube");
-			cube->Move(IMovable::Direction::BACK, 1.5f * 5);
-			cube->Move(IMovable::Direction::LEFT, 1.5f * 5);
-			cube->Move(IMovable::Direction::FORWARD, 1.5f * i);
-			cube->Move(IMovable::Direction::RIGHT, 1.5f * u);
+			cube->Transform().Move(RigidTransform::Direction::BACK, 1.5f * 5);
+			cube->Transform().Move(RigidTransform::Direction::LEFT, 1.5f * 5);
+			cube->Transform().Move(RigidTransform::Direction::FORWARD, 1.5f * i);
+			cube->Transform().Move(RigidTransform::Direction::RIGHT, 1.5f * u);
 			staticVector.push_back(cube);
 			this->_renderEntities[0].push_back(cube);
 		}
@@ -35,7 +35,7 @@ void GameManager::Start() {
 	MSG msg;
 	while (true) {
 		auto share = this->_renderEntities[0][1].lock();
-		if (share)share->Rotate(0.f, 1.f, 0.f);
+		if (share)share->Transform().Rotate(0.f, 1.f, 0.f);
 
 
 		// 🔞 Never use If-statement for PeekMessageW.

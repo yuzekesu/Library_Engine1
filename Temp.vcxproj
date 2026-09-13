@@ -150,7 +150,7 @@
     <ClCompile Include="IEventHandler.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="IRenderWindow.cpp" />
-    <ClCompile Include="IMovable.cpp" />
+    <ClCompile Include="RigidTransform.cpp" />
     <ClCompile Include="MainWindowManager.cpp" />
     <ClCompile Include="TestEventHandler.cpp" />
     <ClCompile Include="TestPipelineManager.cpp" />
@@ -166,7 +166,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="IDrawableIndexedMesh.h" />
     <ClInclude Include="IEventHandler.h" />
-    <ClInclude Include="IMovable.h" />
+    <ClInclude Include="RigidTransform.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="MainWindowManager.h" />
     <ClInclude Include="IRenderPipeline.h" />

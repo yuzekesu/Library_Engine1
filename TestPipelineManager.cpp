@@ -61,7 +61,7 @@ void TestPipelineManager::Run(IRenderWindow& w, DirectX11Manager& dx) {
 	TestPipelineManager::ConstantBuffer cb; // constant buffer in struct.
 	auto camera = this->_pendingItems.front().lock();
 	if (!camera) return;
-	DirectX::XMStoreFloat4(&cb.cameraAngle, camera->Position());
+	DirectX::XMStoreFloat4(&cb.cameraAngle, camera->Transform().Position());
 	std::erase_if(this->_pendingItems, [](const auto& item) {
 		return item.expired();
 		});
@@ -77,7 +77,7 @@ void TestPipelineManager::Run(IRenderWindow& w, DirectX11Manager& dx) {
 		dx.DeferredContext().IASetVertexBuffers(0, 1, entity.PPVertexID3D11Buffer(), &stride, &offset);
 		dx.DeferredContext().IASetIndexBuffer(entity.PIndexID3D11Buffer(), DXGI_FORMAT_R32_UINT, 0);
 		// cbuffer
-		DirectX::XMStoreFloat4x4(&cb.worldMatrix, entity.WorldMatrix());
+		DirectX::XMStoreFloat4x4(&cb.worldMatrix, entity.Transform().WorldMatrix());
 		// 🔞 WHY THE F*CK IS DIRECTXMATH USING ROW VECTOR BUT THE HLSL USING COLUMN VECTOR.
 		// 🔞 WHY THE F*CK IS DIRECTXMATH USING ROW VECTOR BUT THE HLSL USING COLUMN VECTOR.
 		// 🔞 WHY THE F*CK IS DIRECTXMATH USING ROW VECTOR BUT THE HLSL USING COLUMN VECTOR.
@@ -85,7 +85,7 @@ void TestPipelineManager::Run(IRenderWindow& w, DirectX11Manager& dx) {
 		// 🔞 WHY THE F*CK IS DIRECTXMATH USING ROW VECTOR BUT THE HLSL USING COLUMN VECTOR.
 		// 🔞 WHY THE F*CK IS DIRECTXMATH USING ROW VECTOR BUT THE HLSL USING COLUMN VECTOR.
 		// 🔞 WHY THE F*CK IS DIRECTXMATH USING ROW VECTOR BUT THE HLSL USING COLUMN VECTOR.
-		DirectX::XMStoreFloat4x4(&cb.pvwMatrix, entity.WorldMatrix() * vw * pw);
+		DirectX::XMStoreFloat4x4(&cb.pvwMatrix, entity.Transform().WorldMatrix() * vw * pw);
 		D3D11_MAPPED_SUBRESOURCE ms{};
 		hr = dx.DeferredContext().Map(this->_cb.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
 		if (FAILED(hr)) throw Exception(hr);
@@ -153,7 +153,7 @@ DirectX::XMMATRIX TestPipelineManager::_ViewMatrix() const {
 	auto spEntity = this->_pendingItems.front().lock();
 	if (!spEntity) throw std::runtime_error("Invalid weak ptr, unable to get camera information in the TestPipelineManager.");
 	auto& movable = *spEntity;
-	return DirectX::XMMatrixLookAtLH(movable.Position(), DirectX::XMVectorAdd(movable.Position(), movable.Angle(IMovable::Direction::FORWARD)), movable.Angle(IMovable::Direction::UP));
+	return DirectX::XMMatrixLookAtLH(movable.Transform().Position(), DirectX::XMVectorAdd(movable.Transform().Position(), movable.Transform().Angle(RigidTransform::Direction::FORWARD)), movable.Transform().Angle(RigidTransform::Direction::UP));
 }
 /// # VERTEX SHADER
 const std::string SHADER = R"HLSL(

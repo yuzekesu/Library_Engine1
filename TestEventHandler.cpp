@@ -82,15 +82,15 @@ void TestEventHandler::Handle() {
 	const float angle = 90.f * time;
 	if (this->_entities.size() == 0) return;
 	auto pEntity = this->_entities[0].lock();
-	pEntity->Turn(this->_deltaCursorPosition.y / 20.f, this->_deltaCursorPosition.x / 20.f, 0.f);
+	pEntity->Transform().Turn(this->_deltaCursorPosition.y / 20.f, this->_deltaCursorPosition.x / 20.f, 0.f);
 	this->_deltaCursorPosition = {};
 	if (_keyState[KEY_ESC]) PostQuitMessage(0);
-	if (_keyState[KEY_Q]) pEntity->Turn(0.f, 0.f, angle);
-	if (_keyState[KEY_W]) pEntity->Move(IMovable::Direction::FORWARD, distance);
-	if (_keyState[KEY_E]) pEntity->Turn(0.f, 0.f, -angle);
-	if (_keyState[KEY_A]) pEntity->Move(IMovable::Direction::LEFT, distance);
-	if (_keyState[KEY_S]) pEntity->Move(IMovable::Direction::BACK, distance);
-	if (_keyState[KEY_D]) pEntity->Move(IMovable::Direction::RIGHT, distance);
-	if (_keyState[KEY_SHIFT]) pEntity->Move(IMovable::Direction::DOWN, distance);
-	if (_keyState[KEY_SPACE]) pEntity->Move(IMovable::Direction::UP, distance);
+	if (_keyState[KEY_Q]) pEntity->Transform().Turn(0.f, 0.f, angle);
+	if (_keyState[KEY_W]) pEntity->Transform().Move(RigidTransform::Direction::FORWARD, distance);
+	if (_keyState[KEY_E]) pEntity->Transform().Turn(0.f, 0.f, -angle);
+	if (_keyState[KEY_A]) pEntity->Transform().Move(RigidTransform::Direction::LEFT, distance);
+	if (_keyState[KEY_S]) pEntity->Transform().Move(RigidTransform::Direction::BACK, distance);
+	if (_keyState[KEY_D]) pEntity->Transform().Move(RigidTransform::Direction::RIGHT, distance);
+	if (_keyState[KEY_SHIFT]) pEntity->Transform().Move(RigidTransform::Direction::DOWN, distance);
+	if (_keyState[KEY_SPACE]) pEntity->Transform().Move(RigidTransform::Direction::UP, distance);
 }

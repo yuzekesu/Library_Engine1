@@ -75,9 +75,6 @@
     <ClCompile Include="IRenderWindow.cpp">
       <Filter>Interface Files\Source</Filter>
     </ClCompile>
-    <ClCompile Include="IMovable.cpp">
-      <Filter>Interface Files\Source</Filter>
-    </ClCompile>
     <ClCompile Include="Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -94,6 +91,9 @@
       <Filter>EventHandler Files\Source</Filter>
     </ClCompile>
     <ClCompile Include="CommandExecutor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidTransform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -125,9 +125,6 @@
     <ClInclude Include="IRenderPipeline.h">
       <Filter>Interface Files\Header</Filter>
     </ClInclude>
-    <ClInclude Include="IMovable.h">
-      <Filter>Interface Files\Header</Filter>
-    </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -144,6 +141,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CommandExecutor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidTransform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

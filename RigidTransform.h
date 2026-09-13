@@ -1,9 +1,9 @@
 #pragma once
 #include <DirectXMath.h>
 
-class IMovable {
+class RigidTransform {
 public:
-	virtual ~IMovable() = default;
+	virtual ~RigidTransform() = default;
 	enum Direction {
 		UP,
 		DOWN,
@@ -14,8 +14,8 @@ public:
 	};
 	void Rotate(float pitchDegrees, float yawDegrees, float rollDegrees) noexcept;
 	void Turn(float pitchDegrees, float yawDegrees, float rollDegrees) noexcept;
-	void Move(IMovable::Direction, float) noexcept;
-	DirectX::XMVECTOR Angle(IMovable::Direction) const;
+	void Move(RigidTransform::Direction, float) noexcept;
+	DirectX::XMVECTOR Angle(RigidTransform::Direction) const;
 	DirectX::XMVECTOR Position()const noexcept;
 	DirectX::XMMATRIX WorldMatrix() const noexcept;
 private:

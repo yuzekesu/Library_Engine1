@@ -2,7 +2,7 @@
 #include "DirectX11Manager.h"
 #include "Entity.h"
 #include "IDrawableIndexedMesh.h"
-#include "IMovable.h"
+#include "RigidTransform.h"
 #include "IRenderPipeline.h"
 #include "IRenderWindow.h"
 #include <DirectXMath.h>
@@ -15,7 +15,7 @@ using Microsoft::WRL::ComPtr;
 class TestPipelineManager : public IRenderPipeline {
 public:
 	struct PendingItem {
-		std::weak_ptr<IMovable> wpMovable;
+		std::weak_ptr<RigidTransform> wpMovable;
 		std::weak_ptr<IDrawableIndexedMesh> wpDrawable;
 	};
 	TestPipelineManager(std::vector<std::weak_ptr<Entity>>);

@@ -1,4 +1,4 @@
-#include "IMovable.h"
+#include "RigidTransform.h"
 #include <stdexcept>
 inline const unsigned MAXIMUM_ROTAION_COUNT = 300;
 using namespace DirectX;
@@ -12,14 +12,14 @@ inline const XMVECTOR DEFAULT_ANGLE_RIGHT = XMVectorSet(1.f, 0.f, 0.f, 0.f);
 /// 1. Move in 8-directions depending on the current facing angle.
 /// # REMARK
 /// 1. The position will be stored as an XMVECTOR.
-void IMovable::Move(IMovable::Direction direction, float distance) noexcept {
+void RigidTransform::Move(RigidTransform::Direction direction, float distance) noexcept {
 	this->_position += Angle(direction) * distance;
 }
 /// # DESCRIPTION 
 /// 1. Rotate with quaternion.
 /// # REMARK
 /// 1. The rotation will be stored as an XMVECTOR.
-void IMovable::Rotate(float pitchDegrees, float yawDegrees, float rollDegrees) noexcept {
+void RigidTransform::Rotate(float pitchDegrees, float yawDegrees, float rollDegrees) noexcept {
 	//const float pitch = XMConvertToRadians(pitchDegrees);
 	//const float yaw = XMConvertToRadians(yawDegrees);
 	//const float roll = XMConvertToRadians(rollDegrees);
@@ -51,7 +51,7 @@ void IMovable::Rotate(float pitchDegrees, float yawDegrees, float rollDegrees) n
 /// 1. Rotate with quaternion.
 /// # REMARK
 /// 1. The rotation will be stored as an XMVECTOR.
-void IMovable::Turn(float pitchDegrees, float yawDegrees, float rollDegrees) noexcept {
+void RigidTransform::Turn(float pitchDegrees, float yawDegrees, float rollDegrees) noexcept {
 	const float pitch = XMConvertToRadians(pitchDegrees);
 	const float yaw = XMConvertToRadians(yawDegrees);
 	const float roll = XMConvertToRadians(rollDegrees);
@@ -73,15 +73,15 @@ void IMovable::Turn(float pitchDegrees, float yawDegrees, float rollDegrees) noe
 /// 1. Return the XMVECTOR that represent the normalized vector of the direction.
 /// # REMARK
 /// 1. The return value is NOT quaternion.
-XMVECTOR IMovable::Angle(IMovable::Direction direction) const {
+XMVECTOR RigidTransform::Angle(RigidTransform::Direction direction) const {
 	XMVECTOR result;
 	switch (direction) {
-	case IMovable::Direction::BACK: result = XMVector3Rotate(DEFAULT_ANGLE_BACK, this->_rotation); break;
-	case IMovable::Direction::DOWN: result = XMVector3Rotate(DEFAULT_ANGLE_DOWN, this->_rotation); break;
-	case IMovable::Direction::FORWARD: result = XMVector3Rotate(DEFAULT_ANGLE_FORWARD, this->_rotation); break;
-	case IMovable::Direction::LEFT: result = XMVector3Rotate(DEFAULT_ANGLE_LEFT, this->_rotation); break;
-	case IMovable::Direction::RIGHT: result = XMVector3Rotate(DEFAULT_ANGLE_RIGHT, this->_rotation); break;
-	case IMovable::Direction::UP: result = XMVector3Rotate(DEFAULT_ANGLE_UP, this->_rotation); break;
+	case RigidTransform::Direction::BACK: result = XMVector3Rotate(DEFAULT_ANGLE_BACK, this->_rotation); break;
+	case RigidTransform::Direction::DOWN: result = XMVector3Rotate(DEFAULT_ANGLE_DOWN, this->_rotation); break;
+	case RigidTransform::Direction::FORWARD: result = XMVector3Rotate(DEFAULT_ANGLE_FORWARD, this->_rotation); break;
+	case RigidTransform::Direction::LEFT: result = XMVector3Rotate(DEFAULT_ANGLE_LEFT, this->_rotation); break;
+	case RigidTransform::Direction::RIGHT: result = XMVector3Rotate(DEFAULT_ANGLE_RIGHT, this->_rotation); break;
+	case RigidTransform::Direction::UP: result = XMVector3Rotate(DEFAULT_ANGLE_UP, this->_rotation); break;
 	default:
 		throw std::invalid_argument("The specified direction is not recognizable in the enumuration IMovable::Direction.");
 	}
@@ -89,14 +89,14 @@ XMVECTOR IMovable::Angle(IMovable::Direction direction) const {
 }
 /// # DESCRIPTION
 /// 1. A simple getter function.
-DirectX::XMVECTOR IMovable::Position() const noexcept {
+DirectX::XMVECTOR RigidTransform::Position() const noexcept {
 	return this->_position;
 }
 /// # DESCRIPTION
 /// 1. Combine the rotation and the position into one matrix.
 /// # REMARK
 /// 1. Row vector in DirectXMath.
-XMMATRIX IMovable::WorldMatrix() const noexcept {
+XMMATRIX RigidTransform::WorldMatrix() const noexcept {
 	XMMATRIX rm = XMMatrixRotationQuaternion(this->_rotation);
 	XMMATRIX wm = XMMatrixTranslationFromVector(this->_position);
 	return rm * wm;

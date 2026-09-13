@@ -11,3 +11,7 @@ Entity::Entity(std::wstring category) : _category{ category }, IDrawableIndexedM
 std::wstring_view Entity::Category() {
 	return this->_category;
 }
+
+RigidTransform& Entity::Transform() {
+	return *this->_pTransform;
+}
