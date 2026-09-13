@@ -26,9 +26,14 @@ void DisplayManager::ReplacePipeline(std::vector<std::unique_ptr<IRenderPipeline
 /// # REMARK
 /// 1. The concrete implementation details of pipeline is not inside here.
 void DisplayManager::RenderFrame() {
+	HRESULT hr;
 	// 🤓 clear the DSV before all the render pipelines.
 	this->_directX11.DeferredContext().ClearDepthStencilView(&this->_directX11.DepthStencilView(), D3D11_CLEAR_DEPTH, 1.f, 0);
 	for (auto& p : this->_pipelines) {
 		p->Run(this->_window, this->_directX11);
 	}
+	// send command list.
+	ComPtr<ID3D11CommandList> cl;
+	hr = this->_directX11.DeferredContext().FinishCommandList(FALSE, cl.ReleaseAndGetAddressOf());
+	this->_commandExecutor.Submit(cl, this->_directX11.ComPtrSwapChain());
 }

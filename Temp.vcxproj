@@ -140,6 +140,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommandExecutor.cpp" />
     <ClCompile Include="DirectX11Manager.cpp" />
     <ClCompile Include="DisplayManager.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="__WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommandExecutor.h" />
     <ClInclude Include="DirectX11Manager.h" />
     <ClInclude Include="DisplayManager.h" />
     <ClInclude Include="Entity.h" />

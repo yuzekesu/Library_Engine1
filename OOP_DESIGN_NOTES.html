@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DirectX Rendering OOP Design Notes</title>
+  <style>
+    :root { color-scheme: light dark; font-family: "Segoe UI", Arial, sans-serif; line-height: 1.6; }
+    body { max-width: 900px; margin: 0 auto; padding: 40px 24px 64px; background: Canvas; color: CanvasText; }
+    h1 { border-bottom: 2px solid #4f7cac; padding-bottom: .3em; }
+    h2 { margin-top: 2em; }
+    h3 { margin-top: 1.6em; color: #4f7cac; }
+    code { font-family: Consolas, "Courier New", monospace; background: color-mix(in srgb, CanvasText 10%, Canvas); border-radius: 4px; padding: .1em .3em; }
+    pre { overflow-x: auto; padding: 16px; border: 1px solid color-mix(in srgb, CanvasText 20%, Canvas); border-radius: 6px; background: color-mix(in srgb, CanvasText 7%, Canvas); }
+    pre code { padding: 0; background: transparent; }
+    li { margin: .35em 0; }
+    .summary { padding: 16px 18px; border-left: 4px solid #4f7cac; background: color-mix(in srgb, #4f7cac 10%, Canvas); }
+    @media print { body { max-width: none; padding: 12mm; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>DirectX Rendering OOP Design Notes</h1>
+
+    <section class="summary">
+      <h2>Summary</h2>
+      <p>The main architectural improvement is to separate responsibilities and prefer composition over inheritance. Currently, window resources, global DirectX resources, rendering threads, mesh data, GPU buffers, transforms, cameras, and pipelines are tightly connected.</p>
+    </section>
+
+    <h2>Recommended improvements</h2>
+
+    <section>
+      <h3>1. Split <code>DirectX11Manager</code> into three objects</h3>
+      <ul>
+        <li><code>GraphicsDevice</code>: owns the device, adapter, factory, and immediate context.</li>
+        <li><code>RenderSurface</code>: owns per-window resources such as the swap chain, render target, depth target, viewport, composition objects, and resize handling.</li>
+        <li><code>CommandExecutor</code>: handles command-list submission, but only if multithreaded rendering is genuinely needed.</li>
+      </ul>
+      <p><code>DirectX11Manager</code> currently combines all three responsibilities and uses global static state together with an <code>isMainManager</code> lifetime flag.</p>
+    </section>
+
+    <section>
+      <h3>2. Remove most singletons and static global access</h3>
+      <p>Pass <code>GraphicsDevice&amp;</code> or a smaller rendering context explicitly to objects that require it. This makes ownership clear, avoids hidden dependencies, and makes multiple windows or devices easier to support.</p>
+    </section>
+
+    <section>
+      <h3>3. Make interfaces actual interfaces, or rename them</h3>
+      <p><code>IMovable</code> and <code>IDrawableIndexedMesh</code> are concrete, state-owning base classes rather than interfaces.</p>
+      <ul>
+        <li>Rename <code>IMovable</code> to <code>Transform</code>.</li>
+        <li>Split <code>IDrawableIndexedMesh</code> into <code>MeshData</code> and <code>GpuMesh</code>.</li>
+        <li>Reserve the <code>I</code> prefix for classes that define virtual contracts.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>4. Use composition for entities</h3>
+      <p>Instead of making <code>Entity</code> inherit from movement and mesh classes, let it contain or refer to those parts:</p>
+      <pre><code>struct Entity {
+    Transform transform;
+    std::shared_ptr&lt;Mesh&gt; mesh;
+    std::shared_ptr&lt;Material&gt; material;
+};</code></pre>
+      <p>An entity has a transform and a mesh; it is not itself a transform or mesh.</p>
+    </section>
+
+    <section>
+      <h3>5. Separate CPU assets from GPU resources</h3>
+      <p>Loading <code>.im</code> files, storing vertex/index vectors, creating Direct3D buffers, and representing a drawable object should not all be responsibilities of one class.</p>
+      <ul>
+        <li><code>MeshData</code>: stores vertices and indices in CPU memory.</li>
+        <li><code>GpuMesh</code>: owns vertex and index buffers.</li>
+        <li><code>MeshLoader</code>: parses mesh files.</li>
+        <li><code>AssetCache</code>: optionally shares one GPU mesh between many entities.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>6. Make the camera explicit</h3>
+      <p><code>TestPipelineManager</code> currently treats the first entity in its collection as the camera. Pass a <code>Camera</code> or <code>RenderView</code> explicitly instead. The position of an object in a collection should not determine its role.</p>
+    </section>
+
+    <section>
+      <h3>7. Treat pipelines as render passes</h3>
+      <p>A pipeline or render pass should own shaders and fixed pipeline state and should record draw commands. It should not own the scene or decide when the swap chain is presented.</p>
+      <p>A central <code>Renderer</code> should:</p>
+      <ol>
+        <li>Begin the frame.</li>
+        <li>Clear the render and depth targets.</li>
+        <li>Execute every render pass.</li>
+        <li>Finish and submit the command list once.</li>
+        <li>Present the completed frame once.</li>
+      </ol>
+      <p>Currently, every pipeline can finish a command list and enqueue a presentation. This will become problematic when several rendering passes are used in one frame.</p>
+    </section>
+
+    <section>
+      <h3>8. Introduce a small frame context</h3>
+      <p>Instead of passing both <code>IRenderWindow&amp;</code> and the complete <code>DirectX11Manager&amp;</code> into every pipeline, pass a <code>RenderContext&amp;</code> containing only what a pass needs:</p>
+      <ul>
+        <li>the device context;</li>
+        <li>render and depth targets;</li>
+        <li>the viewport;</li>
+        <li>camera data;</li>
+        <li>frame timing data, when required.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>9. Clarify ownership</h3>
+      <p><code>GameManager</code> currently uses static local <code>shared_ptr</code> collections to keep entities alive while most other systems store <code>weak_ptr</code>s. Give a <code>Scene</code> or <code>World</code> clear ownership of the entities.</p>
+      <ul>
+        <li><code>std::unique_ptr</code> for exclusive ownership.</li>
+        <li><code>std::shared_ptr</code> only for genuinely shared resources.</li>
+        <li><code>std::weak_ptr</code> only for optional, non-owning observers.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>10. Simplify threading initially</h3>
+      <p>The current render thread continuously checks a shared queue. For the current size of the project, rendering directly with the immediate context would likely result in a simpler and safer design.</p>
+      <p>If render threading is retained, move it into an explicit <code>RenderExecutor</code> with a condition variable, clear ownership, and deterministic shutdown.</p>
+    </section>
+
+    <section>
+      <h3>11. Hide raw Direct3D binding details</h3>
+      <p>Avoid APIs such as <code>PPVertexID3D11Buffer()</code>. Give <code>GpuMesh</code> a <code>Bind(context)</code> operation or return a small immutable buffer view. Calling code should not need pointer-to-pointer access to internal COM resources.</p>
+    </section>
+
+    <section>
+      <h3>12. Define one matrix convention</h3>
+      <p>Document and enforce the column-vector convention: matrices multiply vectors as <code>matrix * vector</code>. Put any transpose or memory-layout handling at one clearly defined CPU-to-shader upload boundary.</p>
+    </section>
+
+    <h2>Possible target structure</h2>
+    <pre><code>GraphicsDevice
+Renderer
+ |-- RenderSurface
+ |-- CommandExecutor (optional)
+ `-- RenderPass[]
+      `-- consumes RenderItem[]
+
+Scene
+ |-- Camera
+ `-- Entity[]
+      |-- Transform
+      `-- MeshRenderer
+           |-- GpuMesh
+           `-- Material</code></pre>
+
+    <h2>Suggested first refactor</h2>
+    <ol>
+      <li>Split <code>DirectX11Manager</code> into device-level and window-level objects.</li>
+      <li>Convert <code>Entity</code> from inheritance to composition.</li>
+      <li>Move scene and camera ownership out of <code>TestPipelineManager</code>.</li>
+      <li>Make <code>Renderer</code> responsible for frame boundaries and presenting.</li>
+    </ol>
+  </main>
+</body>
+</html>

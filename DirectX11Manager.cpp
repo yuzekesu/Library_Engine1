@@ -4,6 +4,7 @@
 #include "DirectX11Manager.h"
 #include "Exception.h"
 #include <array>
+#include <mutex>
 
 /// # CONSTRUCTION
 /// 1. statics
@@ -115,11 +116,6 @@ DirectX11Manager::DirectX11Manager(IRenderWindow& w, bool isMainManager) : _isMa
 		if (FAILED(hr)) throw Exception{ hr };
 	}
 }
-DirectX11Manager::~DirectX11Manager() {
-	if (!this->_isMainManager) return;
-	this->_renderThread.request_stop();
-	this->_renderThread.join();
-}
 ID3D11DeviceContext& DirectX11Manager::DeferredContext() noexcept {
 	return *this->_deferredContext.Get();
 }
@@ -164,18 +160,7 @@ void DirectX11Manager::InitializeStatics() {
 	std::lock_guard locker(mutex);
 	if (DirectX11Manager::_areStaticsInitialized) return;
 
-	// render thread.
-	// 1. run as long 
-	DirectX11Manager::_renderThread = std::jthread([&](std::stop_token stopToken) {
-		while (!stopToken.stop_requested()) {
-			std::lock_guard lock(DirectX11Manager::_renderQueueMutex);
-			if (DirectX11Manager::_renderQueue.empty()) continue;
-			auto& [cl, sc] = DirectX11Manager::_renderQueue.front();
-			DirectX11Manager::_immediateContext->ExecuteCommandList(cl.Get(), FALSE);
-			sc->Present(1, 0);
-			DirectX11Manager::_renderQueue.pop();
-		}
-		});
+
 
 	// factory.
 	HRESULT hr;
@@ -197,15 +182,6 @@ void DirectX11Manager::InitializeStatics() {
 		if (FAILED(hr)) throw Exception{ hr };
 	}
 	DirectX11Manager::_areStaticsInitialized = true;
-}
-/// # DESCRIPTION
-/// 1. As the method name is saying.
-/// # REMARK
-/// 1. Do not forget to call it in the worker thread.
-/// 2. No visual updates if not calling this for that thread/window.
-void DirectX11Manager::PushCommandListToTheRenderQueue(ComPtr<ID3D11CommandList>& cl, ComPtr<IDXGISwapChain4>& sc) {
-	std::lock_guard lock(DirectX11Manager::_renderQueueMutex);
-	DirectX11Manager::_renderQueue.push({ cl, sc });
 }
 /// # DESCRIPTION
 /// 1. A simple getter function.

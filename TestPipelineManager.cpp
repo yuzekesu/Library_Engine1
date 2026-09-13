@@ -23,7 +23,7 @@ D3D11_INPUT_ELEMENT_DESC InputElementDesc[]{
 /// 1. The definition is at the botton of this file.
 extern const std::string SHADER;
 /// # CONSTRUCTOR
-TestPipelineManager::TestPipelineManager(std::initializer_list<std::weak_ptr<Entity>> vector) : TestPipelineManager() {
+TestPipelineManager::TestPipelineManager(std::vector<std::weak_ptr<Entity>> vector) : TestPipelineManager() {
 	_pendingItems = vector;
 }
 /// # DESCRIPTION
@@ -94,18 +94,6 @@ void TestPipelineManager::Run(IRenderWindow& w, DirectX11Manager& dx) {
 		// draw
 		dx.DeferredContext().DrawIndexed(static_cast<UINT>(entity.Indices().size()), 0, 0);
 	}
-	// send command list.
-	ComPtr<ID3D11CommandList> cl;
-	hr = dx.DeferredContext().FinishCommandList(FALSE, cl.ReleaseAndGetAddressOf());
-	DirectX11Manager::PushCommandListToTheRenderQueue(cl, dx.ComPtrSwapChain());
-}
-TestPipelineManager& TestPipelineManager::Instance() {
-	static auto global_pipeline = std::make_unique<TestPipelineManager>();
-	return *global_pipeline;
-}
-void TestPipelineManager::Add(std::weak_ptr<Entity> entity) {
-	static std::vector<std::weak_ptr<Entity>> global_vector;
-	global_vector.push_back(entity);
 }
 /// # CONSTRUCTOR
 /// 1. Vertex shader.

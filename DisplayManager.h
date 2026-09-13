@@ -1,4 +1,5 @@
 #pragma once
+#include "CommandExecutor.h"
 #include "DirectX11Manager.h"
 #include "IRenderPipeline.h"
 #include "IRenderWindow.h"
@@ -24,6 +25,7 @@ public:
 private:
 	IRenderWindow& _window;
 	DirectX11Manager _directX11;
+	Render::CommandExecutor _commandExecutor{ DirectX11Manager::ImmediateContext() };
 	std::vector<std::unique_ptr<IRenderPipeline>> _pipelines;
 };
 

@@ -93,6 +93,9 @@
     <ClCompile Include="TestEventHandler.cpp">
       <Filter>EventHandler Files\Source</Filter>
     </ClCompile>
+    <ClCompile Include="CommandExecutor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainWindowManager.h">
@@ -138,6 +141,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TestEventHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandExecutor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

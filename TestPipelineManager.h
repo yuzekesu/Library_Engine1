@@ -18,11 +18,8 @@ public:
 		std::weak_ptr<IMovable> wpMovable;
 		std::weak_ptr<IDrawableIndexedMesh> wpDrawable;
 	};
-	TestPipelineManager(std::initializer_list<std::weak_ptr<Entity>>);
-	void Add(std::weak_ptr<Entity>);
+	TestPipelineManager(std::vector<std::weak_ptr<Entity>>);
 	void Run(IRenderWindow&, DirectX11Manager&) override;
-	static TestPipelineManager& Instance();
-	static void Add(std::weak_ptr<Entity>);
 protected:
 	TestPipelineManager();
 private:

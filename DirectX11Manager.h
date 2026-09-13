@@ -3,9 +3,6 @@
 #include <d3d11.h>
 #include <dcomp.h>
 #include <dxgi1_6.h>
-#include <mutex>
-#include <queue>
-#include <thread>
 #include <wrl.h>
 using Microsoft::WRL::ComPtr;
 
@@ -17,7 +14,6 @@ public:
 	DirectX11Manager(IRenderWindow&, bool isMainManager = false);
 	DirectX11Manager(const DirectX11Manager&) = delete;
 	DirectX11Manager(DirectX11Manager&&) = delete;
-	~DirectX11Manager();
 	DirectX11Manager& operator=(const DirectX11Manager&) = delete;
 	DirectX11Manager& operator=(DirectX11Manager&&) = delete;
 	ID3D11DeviceContext& DeferredContext() noexcept;
@@ -28,7 +24,6 @@ public:
 	IDCompositionDesktopDevice& CompositionDevice() noexcept;
 	ID3D11DepthStencilView& DepthStencilView() noexcept;
 	static void InitializeStatics();
-	static void PushCommandListToTheRenderQueue(ComPtr<ID3D11CommandList>&, ComPtr<IDXGISwapChain4>&);
 	static IDXGIFactory6& Factory() noexcept;
 	static IDXGIAdapter4& Adapter() noexcept;
 	static ID3D11Device& Device() noexcept;
@@ -45,9 +40,7 @@ private:
 	ComPtr<ID3D11Texture2D> _depthBuffer;
 	ComPtr<ID3D11DepthStencilView> _depthStencilView;
 	inline static bool _areStaticsInitialized = false;
-	inline static std::jthread _renderThread;
-	inline static std::mutex _renderQueueMutex;
-	inline static std::queue<std::tuple<ComPtr<ID3D11CommandList>, ComPtr<IDXGISwapChain4>>> _renderQueue;
+
 	inline static ComPtr<IDXGIFactory6> _factory;
 	inline static ComPtr<IDXGIAdapter4> _adapter;
 	inline static ComPtr<ID3D11Device> _device;
