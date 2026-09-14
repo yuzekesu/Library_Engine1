@@ -146,6 +146,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="GraphicsDevice.cpp" />
     <ClCompile Include="IDrawableIndexedMesh.cpp" />
     <ClCompile Include="IEventHandler.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="GraphicsDevice.h" />
     <ClInclude Include="IDrawableIndexedMesh.h" />
     <ClInclude Include="IEventHandler.h" />
     <ClInclude Include="RigidTransform.h" />

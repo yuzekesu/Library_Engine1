@@ -41,9 +41,6 @@ private:
 	ComPtr<ID3D11DepthStencilView> _depthStencilView;
 	inline static bool _areStaticsInitialized = false;
 
-	inline static ComPtr<IDXGIFactory6> _factory;
-	inline static ComPtr<IDXGIAdapter4> _adapter;
-	inline static ComPtr<ID3D11Device> _device;
-	inline static ComPtr<ID3D11DeviceContext> _immediateContext;
+
 };
 
